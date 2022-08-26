@@ -1,0 +1,54 @@
+﻿@model IEnumerable<HasanDemirtasBitirmeProjesi.Admin.Models.ProductModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="delete_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Ürünü silmek istediğinize emin misiniz?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="delete_modal_button" type="button" class="btn btn-primary">Ürünü Sil</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div id="@product.Id" class="col-sm-6 col-md-4 mt-3">
+            <div class="card" style="width: 18rem;">
+                <img id="preview_card_image" class="card-img-top" src="@product.Image" alt="Card image cap" style="height:180px">
+                <div class="card-body">
+                    <h5 id="preview_card_title" class="card-title">@product.Name</h5>
+                    <p id="preview_card_description" class="card-text">@product.Description</p>
+                    <h5 id="preview_card_price" class="text-center">@product.Price</h5>
+                    <button onclick="deleteItem('@product.Id')" class="btn btn-danger">Sil</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function deleteItem(id) {
+        $('#delete_modal').modal('show');
+        $("#delete_modal_button").click(function () {
+            $.ajax({
+                type: "POST",
+                data: {id: id},
+                url: "/Admin/DeleteProduct"
+            }).done(function () {
+                $("#"+id).remove();
+                $('#delete_modal').modal('hide');
+            });
+        });
+    }
+</script>

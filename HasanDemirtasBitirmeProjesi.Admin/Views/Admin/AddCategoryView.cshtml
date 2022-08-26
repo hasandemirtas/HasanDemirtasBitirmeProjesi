@@ -1,0 +1,59 @@
+﻿@model IEnumerable<HasanDemirtasBitirmeProjesi.Entity.Entities.Category>
+
+@{
+    ViewData["Title"] = "AddCategoryView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="form-group mb-5">
+        <label for="categoryName">Yeni Kategori</label>
+        <input type="text" class="form-control" id="categoryName" placeholder="Yeni bir kategori giriniz" required>
+
+        <button onclick="addNewCategory()" class="btn btn-success mt-1">Ekle</button>
+    </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                No
+            </th>
+            <th>
+                Kategori Adı
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr id="table-row">
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+        </tr>
+
+}
+    </tbody>
+</table>
+
+
+<script>
+
+  
+    function addNewCategory() {
+
+        var categoryName = document.getElementById('categoryName').value;
+        if(categoryName != ""){
+            $.ajax({
+                type: "POST",
+                data: { name: categoryName },
+                url: "/Admin/AddCategory"
+            }).done(function () {
+                location.reload();
+
+            });;
+        }
+    }
+</script>

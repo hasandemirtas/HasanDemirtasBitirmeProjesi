@@ -1,0 +1,63 @@
+﻿@model IEnumerable<HasanDemirtasBitirmeProjesi.Presentation.Models.ProductModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Mevcut Ürünler</h1>
+
+<div id="buy_modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Ürünü satın almak istediğinize emin misiniz?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="buy_modal_button" type="button" class="btn btn-success">Satın Al</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div id="@product.Id" class="col-sm-6 col-md-4 mt-3">
+            <div class="card" style="width: 18rem;">
+                <img id="preview_card_image" class="card-img-top" src="@product.Image" alt="Card image cap" style="height:180px">
+                <div class="card-body">
+                    <h5 id="preview_card_title" class="card-title">@product.Name</h5>
+                    <p id="preview_card_description" class="card-text">@product.Description</p>
+                    <h5 id="preview_card_price" class="text-center">@product.Price</h5>
+                    <div class="d-flex justify-content-between">
+                        <p>Stok: @product.Quantity</p>
+                        <button onclick="buyProduct('@product.Id',@product.Quantity)" class="btn btn-primary">Satın Al</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function buyProduct(id,quentity) {
+        if(quentity != 0){
+            $('#buy_modal').modal('show');
+            $("#buy_modal_button").click(function () {
+                $.ajax({
+                    type: "POST",
+                    data: { id: id },
+                    url: "/Home/BuyProduct"
+                }).done(function () {
+                    $('#buy_modal').modal('hide');
+                    location.reload();
+                });
+            });
+        }else{
+            alert("Bu üründen stokta yok...")
+        }
+    }
+</script>
